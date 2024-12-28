@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Title of the Application
 st.title("Virat Kohli ODI Analysis")
@@ -28,65 +27,84 @@ if uploaded_file:
     st.write(f"Total Runs: {total_runs}")
     st.write(f"Average Runs: {avg_runs}")
 
-    # Runs Scored Over Matches (Plotly)
+    # Runs Scored Over Matches
     st.subheader("Runs Scored Over Matches")
-    matches = data.index
-    figure = px.line(data, x=matches, y="Runs", 
-                     title='Runs Scored by Virat Kohli Between 18-Aug-08 - 22-Jan-17')
-    st.plotly_chart(figure)
+    plt.figure(figsize=(10, 5))
+    plt.plot(data.index, data["Runs"], label="Runs", color="b")
+    plt.title("Runs Scored by Virat Kohli Between 18-Aug-08 - 22-Jan-17")
+    plt.xlabel("Matches")
+    plt.ylabel("Runs")
+    plt.grid(True)
+    st.pyplot()
 
-    # Batting Positions (Plotly)
+    # Batting Positions
     data["Pos"] = data["Pos"].map({
         3.0: "Batting At 3", 4.0: "Batting At 4", 2.0: "Batting At 2", 
         1.0: "Batting At 1", 7.0: "Batting At 7", 5.0: "Batting At 5", 
         6.0: "Batting At 6"
     })
     st.subheader("Matches Played at Different Batting Positions")
-    Pos = data["Pos"].value_counts()
-    fig = go.Figure(data=[go.Pie(labels=Pos.index, values=Pos.values)])
-    fig.update_layout(title_text='Number of Matches at Different Batting Positions')
-    st.plotly_chart(fig)
+    pos = data["Pos"].value_counts()
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=pos.index, y=pos.values, palette="viridis")
+    plt.title("Number of Matches at Different Batting Positions")
+    plt.xlabel("Batting Position")
+    plt.ylabel("Number of Matches")
+    st.pyplot()
 
     st.subheader("Runs Scored at Different Batting Positions")
-    fig = go.Figure(data=[go.Pie(labels=data["Pos"], values=data["Runs"])])
-    fig.update_layout(title_text='Runs by Virat Kohli at Different Batting Positions')
-    st.plotly_chart(fig)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=data["Pos"], y=data["Runs"], palette="viridis")
+    plt.title("Runs by Virat Kohli at Different Batting Positions")
+    plt.xlabel("Batting Position")
+    plt.ylabel("Runs")
+    st.pyplot()
 
-    # Centuries by Virat Kohli (Plotly)
+    # Centuries
     st.subheader("Centuries by Virat Kohli")
     centuries = data.query("Runs >= 100")
-    figure = px.bar(centuries, x="Inns", y="Runs", color="Runs",
-                    title="Centuries in First Innings Vs. Second Innings")
-    st.plotly_chart(figure)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x="Inns", y="Runs", data=centuries, hue="Runs", palette="viridis")
+    plt.title("Centuries in First Innings Vs. Second Innings")
+    plt.xlabel("Innings")
+    plt.ylabel("Runs")
+    st.pyplot()
 
-    # Dismissals of Virat Kohli (Plotly)
+    # Dismissals
     st.subheader("Dismissals of Virat Kohli")
     dismissal = data["Dismissal"].value_counts()
-    fig = go.Figure(data=[go.Pie(labels=dismissal.index, values=dismissal.values)])
-    fig.update_layout(title_text='Dismissals of Virat Kohli')
-    st.plotly_chart(fig)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=dismissal.index, y=dismissal.values, palette="viridis")
+    plt.title("Dismissals of Virat Kohli")
+    plt.xlabel("Dismissal Type")
+    plt.ylabel("Count")
+    st.pyplot()
 
-    # Most Runs Against Teams (Plotly)
+    # Most Runs Against Teams
     st.subheader("Most Runs Against Teams")
-    figure = px.bar(data, x="Opposition", y="Runs", color="Runs",
-                    title="Most Runs Against Teams")
-    st.plotly_chart(figure)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x="Opposition", y="Runs", data=data, palette="viridis")
+    plt.title("Most Runs Against Teams")
+    plt.xlabel("Opposition")
+    plt.ylabel("Runs")
+    st.pyplot()
 
-    # Most Centuries Against Teams (Plotly)
+    # Most Centuries Against Teams
     st.subheader("Most Centuries Against Teams")
-    figure = px.bar(centuries, x="Opposition", y="Runs", color="Runs",
-                    title="Most Centuries Against Teams")
-    st.plotly_chart(figure)
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x="Opposition", y="Runs", data=centuries, palette="viridis")
+    plt.title("Most Centuries Against Teams")
+    plt.xlabel("Opposition")
+    plt.ylabel("Runs")
+    st.pyplot()
 
-    # High Strike Rates (Plotly)
+    # High Strike Rates
     st.subheader("High Strike Rates")
     strike_rate = data.query("SR >= 120")
     st.write(strike_rate)
-    figure = px.bar(strike_rate, x="Inns", y="SR", color="SR",
-                    title="High Strike Rates in First Innings Vs. Second Innings")
-    st.plotly_chart(figure)
-
-    # Example of using Matplotlib (if you need non-interactive plots)
-    fig, ax = plt.subplots()  # Create figure and axes
-    ax.scatter([1, 2, 3], [1, 2, 3])  # Example plot
-    st.pyplot(fig)  # Pass figure to st.pyplot() to avoid deprecation warning
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x="Inns", y="SR", data=strike_rate, hue="SR", palette="viridis")
+    plt.title("High Strike Rates in First Innings Vs. Second Innings")
+    plt.xlabel("Innings")
+    plt.ylabel("Strike Rate")
+    st.pyplot()
