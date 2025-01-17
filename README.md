@@ -1,4 +1,4 @@
-This mini project was developed as a **mini-project** to demonstrate automated performance analysis and visualization for a cricket legend using Python.
+This project was developed as a **mini-project** to demonstrate automated performance analysis and visualization for a cricket legend using Python.
 
 ---
 
